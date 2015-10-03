@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         NFOrce IMDB
 // @namespace    http://www.nfohump.com/
-// @version      1.0.0
+// @version      1.0.1
 // @description  Show inline IMDB.com ratings and movie details
 // @author       https://github.com/SirPumpAction
 // @match        http://*.nfohump.com/forum/*
@@ -78,7 +78,7 @@ function renderData(data, $link){
                 break;
         }
     });
-    $kvp.prepend( "<dt><center>IMDB extra info by Pumpy</center></dt><dd></dd>" );
+    $kvp.prepend( "<dt><center>NFOrce IMDB by <a href='https://github.com/SirPumpAction/nforce_imdb'>SirPumpAction</a></center></dt><dd></dd>" );
 
     var $span = $jq('<span class="details">');
 
