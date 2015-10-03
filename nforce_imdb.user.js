@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         NFOrce IMDB
 // @namespace    http://www.nfohump.com/
-// @version      1.0.1
+// @version      1.0.2
 // @description  Show inline IMDB.com ratings and movie details
 // @author       https://github.com/SirPumpAction
 // @match        http://*.nfohump.com/forum/*
@@ -9,6 +9,7 @@
 // @grant        GM_addStyle
 // @downloadURL  https://github.com/SirPumpAction/nforce_imdb/raw/master/nforce_imdb.user.js
 // @updateURL    https://github.com/SirPumpAction/nforce_imdb/raw/master/nforce_imdb.user.js
+// @require      http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js
 // ==/UserScript==
 
 GM_addStyle("\
@@ -22,7 +23,6 @@ GM_addStyle("\
 .nforating:hover > span.details {opacity: 1; visibility: visible;}\
 ");
 
-var $jq = $;
 function setColor(p){
     p=p<0?0:p>100?100:p;
     var red = p<50 ? 255 : Math.round(256 - (p-50)*5.12);
@@ -30,8 +30,9 @@ function setColor(p){
     return "rgb(" + red + "," + green + ",0)";
 }
 
-$jq('a.nav[href*="imdb.com/title"]').each(function(){
-    var $link = $jq(this);
+
+$('a.nav[href*="imdb.com/title/"]').each(function(){
+    var $link = $(this);
     
     var href = $link.attr('href');
     
@@ -49,7 +50,7 @@ $jq('a.nav[href*="imdb.com/title"]').each(function(){
                 
         if (fetch) {
             $link.after("<span class='nforating'>loading...</span>");
-            $jq.getJSON("http://www.omdbapi.com/?i=" + ttid[1] + "&plot=short&r=json", function( data ) {
+            $.getJSON("http://www.omdbapi.com/?i=" + ttid[1] + "&plot=short&r=json", function( data ) {
                 data.date = Date.now();
                 localStorage["nfohump."+ttid[1]] = JSON.stringify(data);
                 renderData(data, $link);
@@ -63,8 +64,8 @@ $jq('a.nav[href*="imdb.com/title"]').each(function(){
 function renderData(data, $link){
     $link.next('span.nforating').remove();
     
-    var $kvp = $jq('<dl>');
-    $jq.each( data, function( key, val ) {
+    var $kvp = $('<dl>');
+    $.each( data, function( key, val ) {
         switch (key) {
             case "Poster":
                 if (val!='N/A')
@@ -80,9 +81,9 @@ function renderData(data, $link){
     });
     $kvp.prepend( "<dt><center>NFOrce IMDB by <a href='https://github.com/SirPumpAction/nforce_imdb'>SirPumpAction</a></center></dt><dd></dd>" );
 
-    var $span = $jq('<span class="details">');
+    var $span = $('<span class="details">');
 
-    var $rating = $jq('<span>');
+    var $rating = $('<span>');
     $rating.addClass('nforating');
 
     $rating.html('[<span class="det" style="color:' + setColor(parseFloat(data.imdbRating)*12-20)+ ';">' + data.imdbRating + '</span>, ' + data.Genre + ']');
