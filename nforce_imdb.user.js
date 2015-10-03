@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         NFOrce IMDB
 // @namespace    http://www.nfohump.com/
-// @version      1.0.2
+// @version      1.0.3
 // @description  Show inline IMDB.com ratings and movie details
 // @author       https://github.com/SirPumpAction
 // @match        http://*.nfohump.com/forum/*
@@ -40,39 +40,49 @@ $('a.nav[href*="imdb.com/title/"]').each(function(){
     
     if (ttid){
         var fetch = false;
-        var storageid = "nfohump."+ttid[1];
-        
+        var storageid = "nforce." + ttid[1];
         if (!localStorage[storageid])
             fetch = true;
         else
-            if (Date.now() - (JSON.parse(localStorage[storageid])).date > 172800000)
+            if (Date.now() - (JSON.parse(localStorage[storageid])).date > 14400000) //updates every 4 hours
                 fetch = true;
                 
         if (fetch) {
             $link.after("<span class='nforating'>loading...</span>");
-            $.getJSON("http://www.omdbapi.com/?i=" + ttid[1] + "&plot=short&r=json", function( data ) {
+            $.getJSON("http://www.omdbapi.com/?i=" + ttid[1] + "&plot=short&r=json&random="+Math.round(Math.random()*100000), function( data ) {
                 data.date = Date.now();
-                localStorage["nfohump."+ttid[1]] = JSON.stringify(data);
+                localStorage["nforce."+ttid[1]] = JSON.stringify(data);
                 renderData(data, $link);
             });
         } else {
-            renderData(JSON.parse(localStorage["nfohump."+ttid[1]]), $link);
+            renderData(JSON.parse(localStorage["nforce."+ttid[1]]), $link);
         }
     }
 });
+
+function forceRefresh(){
+    localStorage.clear();
+    document.location.reload();
+}
 
 function renderData(data, $link){
     $link.next('span.nforating').remove();
     
     var $kvp = $('<dl>');
     $.each( data, function( key, val ) {
-        switch (key) {
-            case "Poster":
+        switch (key.toLowerCase()) {
+            case "poster":
                 if (val!='N/A')
                     $kvp.prepend( "<dt><center><a href='"+val+"' target='_BLANK' rel = 'noreferrer'>Poster link (opens in new tab)</a></center></dt>" );
                 break;
             case "date":
-                $kvp.append( "<dt>Last updated on</dt><dd>" + (new Date(val)).toUTCString() + "</dd>" );
+                var $forceRefresh = $("<button>Force refresh</button>");
+                $forceRefresh.on('click', function() {forceRefresh()});
+                var $dd = $("<dd>" + (new Date(val)).toLocaleString() + " </dd>");
+                $dd.append($forceRefresh);
+                
+                $kvp.append( "<dt>Last updated on</dt>" );
+                $kvp.append( $dd);
                 break;
             default:
                 $kvp.append( "<dt>" + key + "</dt><dd>" + val + "</dd>" );
