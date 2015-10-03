@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         NFOrce IMDB
 // @namespace    http://www.nfohump.com/
-// @version      0.6.0
+// @version      1.0.0
 // @description  Show inline IMDB.com ratings and movie details
 // @author       https://github.com/SirPumpAction
 // @match        http://*.nfohump.com/forum/*
