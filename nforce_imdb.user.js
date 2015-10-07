@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         NFOrce IMDB
 // @namespace    http://www.nfohump.com/
-// @version      1.0.3
+// @version      1.0.4
 // @description  Show inline IMDB.com ratings and movie details
 // @author       https://github.com/SirPumpAction
 // @match        http://*.nfohump.com/forum/*
@@ -29,7 +29,6 @@ function setColor(p){
     var green = p>50 ? 255 : Math.round((p)*5.12);
     return "rgb(" + red + "," + green + ",0)";
 }
-
 
 $('a.nav[href*="imdb.com/title/"]').each(function(){
     var $link = $(this);
@@ -72,6 +71,7 @@ function renderData(data, $link){
     $.each( data, function( key, val ) {
         switch (key.toLowerCase()) {
             case "poster":
+                $kvp.prepend("<hr><dt><center><a target='_BLANK' href='https://www.google.com/search?q=altyazı+izle+" + data.Title + "+" + data.Year + "&btnI'>► Watch online(beta)</a> - Click on \"Reklamı geç\"</center></dt>");
                 if (val!='N/A')
                     $kvp.prepend( "<dt><center><a href='"+val+"' target='_BLANK' rel = 'noreferrer'>Poster link (opens in new tab)</a></center></dt>" );
                 break;
