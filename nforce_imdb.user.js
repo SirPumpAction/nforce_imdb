@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         NFOrce IMDB
 // @namespace    http://www.nfohump.com/
-// @version      1.1.1
+// @version      1.1.2
 // @description  Show inline IMDB.com ratings and movie details
 // @author       https://github.com/SirPumpAction
 // @match        http://*.nfohump.com/forum/*
@@ -71,7 +71,7 @@ function renderData(data, $link){
     $.each( data, function( key, val ) {
         switch (key.toLowerCase()) {
             case "poster":
-                $kvp.prepend("<hr><dt><center><a target='_BLANK' href='https://www.google.com/search?q=altyazı+izle+" + encodeURIComponent(data.Title) + "+" + data.Year + "&btnI'>► Watch online(beta)</a> - Click on \"Reklamı geç\"</center></dt>");
+                $kvp.prepend("<hr><dt><center><a target='_BLANK' href='https://www.google.com/search?q=altyazı+izle+" + escape(data.Title) +"+" + data.Year + "&btnI'>► Watch online(beta)</a> - Click on \"Reklamı geç\"</center></dt>");
                 if (val!='N/A')
                     $kvp.prepend( "<dt><center><a href='"+val+"' target='_BLANK' rel = 'noreferrer'>Poster link (opens in new tab)</a></center></dt>" );
                 break;
