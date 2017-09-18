@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         NFOrce IMDB
 // @namespace    http://www.nfohump.com/
-// @version      1.2.1
+// @version      1.2.2
 // @description  Show inline IMDB.com ratings and movie details
 // @author       https://github.com/SirPumpAction
 // @match        http://*.nfohump.com/forum/*
@@ -37,7 +37,7 @@ $('a.nav[href*="imdb.com/title/"]').each(function(){
     var ttid = href.match(/imdb\.com\/title\/(\w*)/i);
     if (ttid){
         var fetch = false;
-        var storageid = "nforce." + ttid[1];
+        var storageid = "nforce2." + ttid[1];
         if (!localStorage[storageid])
             fetch = true;
         else
@@ -72,12 +72,12 @@ $('a.nav[href*="imdb.com/title/"]').each(function(){
 
                     });
                     data.date = Date.now();
-                    localStorage["nforce."+ttid[1]] = JSON.stringify(data);
+                    localStorage["nforce2."+ttid[1]] = JSON.stringify(data);
                     renderData(data, $link);
                 }
             });
         } else {
-            renderData(JSON.parse(localStorage["nforce."+ttid[1]]), $link);
+            renderData(JSON.parse(localStorage["nforce2."+ttid[1]]), $link);
         }
     }
 });
